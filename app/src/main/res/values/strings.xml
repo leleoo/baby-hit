@@ -1,3 +1,10 @@
 <resources>
-    <string name="app_name">BB心跳宝</string>
+    <string name="app_name">BB监护宝</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_home">胎动监护</string>
+    <string name="title_dashboard">心跳监护</string>
+    <string name="title_notifications">关于</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
