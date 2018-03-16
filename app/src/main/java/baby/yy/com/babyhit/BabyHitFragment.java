@@ -1,5 +1,6 @@
 package baby.yy.com.babyhit;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,7 +39,8 @@ public class BabyHitFragment extends Fragment {
     long startTime;
     LineChart chart;
     List<Entry> hitHis = new ArrayList<>();
-
+    View view;
+    Context ctx;
 
 //    protected void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -61,18 +63,18 @@ public class BabyHitFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.baby_hit, container, false);
-        if(!isInit) {
-            isInit = true;
-            tvResult1 = (TextView) view.findViewById(R.id.textView1);
-            addBtn = (CircleButton) view.findViewById(R.id.button1);
-            resetBtn = (Button) view.findViewById(R.id.button2);
-            init(view);
+        if(view == null) {
+            view = inflater.inflate(R.layout.baby_hit, container, false);
+            init();
         }
         return view;
     }
 
-    private void init(View parentView){
+    private void init(){
+        tvResult1 = (TextView) view.findViewById(R.id.textView1);
+        addBtn = (CircleButton) view.findViewById(R.id.button1);
+        resetBtn = (Button) view.findViewById(R.id.button2);
+
         hitCounter = 0;//设置初始数字
 
         addBtn.setOnClickListener(new View.OnClickListener() {
@@ -107,7 +109,7 @@ public class BabyHitFragment extends Fragment {
             }
         });
 
-        chart = (LineChart) parentView.findViewById(R.id.chart);
+        chart = (LineChart) view.findViewById(R.id.chart);
         chart = initChart(chart);
 
     }

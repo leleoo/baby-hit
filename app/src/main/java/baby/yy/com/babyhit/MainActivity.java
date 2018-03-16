@@ -1,5 +1,6 @@
 package baby.yy.com.babyhit;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -17,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     FragmentManager mFm;
     BabyHitFragment mBabyHitFragment;
     BabyMoveFragment mBabyMoveFragment;
+    Context ctx;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
                         FragmentTransaction ft = mFm.beginTransaction();
                         if (mBabyMoveFragment == null) {
                             mBabyMoveFragment = new BabyMoveFragment();
+                            mBabyMoveFragment.ctx = ctx;
                         } else {
                             System.out.println(mBabyMoveFragment);
                         }
@@ -44,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                         //
                         if (mBabyHitFragment == null) {
                             mBabyHitFragment = new BabyHitFragment();
+                            mBabyHitFragment.ctx = ctx;
                             ft.replace(R.id.content, mBabyHitFragment);
                         } else {
                             System.out.println(mBabyHitFragment);
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ctx = getApplicationContext();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FrameLayout fl = (FrameLayout) findViewById(R.id.content);
