@@ -1,6 +1,7 @@
 package baby.yy.com.babyhit;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -28,10 +29,13 @@ public class BabyMoveFragment extends Fragment {
     long last_count_time2;
     View view;
     Handler handler = new Handler();
-    Context ctx;
+    private Context ctx;
     CountDownTimer timer1, timer2;
+    private boolean hasReset = false;
 
-
+    public void setContext(Context ctx) {
+        this.ctx = ctx;
+    }
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,10 +49,13 @@ public class BabyMoveFragment extends Fragment {
         if(view == null) {
             view = inflater.inflate(R.layout.baby_move, container, false);
             init();
+            //
+            reSetCounter();
         }
         return view;
     }
     final long intverTimeMillis = 5*60*1000;
+
     private void init(){
         tvResult1 = (TextView) view.findViewById(R.id.textView1);
         tvResult2 = (TextView) view.findViewById(R.id.textView2);
@@ -64,8 +71,8 @@ public class BabyMoveFragment extends Fragment {
                 if(last_count_time1 == 0 || System.currentTimeMillis() - last_count_time1 >= intverTimeMillis) {
                     counter1++;
                     last_count_time1 = System.currentTimeMillis();
-                    timer1 = showTimer(tvResult4);
-
+                    timer1 = showTimer(tvResult4, intverTimeMillis);
+                    saveCounter();
                 }else{
                     //showToast(msg);
                 }
@@ -79,7 +86,8 @@ public class BabyMoveFragment extends Fragment {
                 if(last_count_time2 == 0 || (System.currentTimeMillis() - last_count_time2 >= intverTimeMillis) ) {
                     counter2++;
                     last_count_time2 = System.currentTimeMillis();
-                    timer2 = showTimer(tvResult5);
+                    timer2 = showTimer(tvResult5, intverTimeMillis);
+                    saveCounter();
                 }else{
                     //showToast(msg);
                 }
@@ -98,17 +106,57 @@ public class BabyMoveFragment extends Fragment {
                 tvResult2.setText("0");
                 tvResult4.setText("");
                 tvResult5.setText("");
-
-                timer1.cancel();
-                timer2.cancel();
+                if(timer1 != null) {
+                    timer1.cancel();
+                }
+                if(timer2 != null) {
+                    timer2.cancel();
+                }
+                saveCounter();
             }
         });
 
     }
 
 
+    private void saveCounter() {
+        //if(ctx != null) {
+            SharedPreferences sp = ctx.getSharedPreferences("move_counter", Context.MODE_PRIVATE);
+            sp.edit().putInt("counter1", counter1).putInt("counter2", counter2)
+                    .putLong("last_count_time1", last_count_time1).putLong("last_count_time2", last_count_time2).commit();
+        //}
+    }
 
-    public CountDownTimer showTimer(final TextView textView) {
+    private void reSetCounter() {
+        if(hasReset){
+            return;
+        }
+        hasReset = true;
+        SharedPreferences sp = ctx.getSharedPreferences("move_counter", Context.MODE_PRIVATE);
+
+        counter1 = sp.getInt("counter1",0);
+        last_count_time1 = sp.getLong("last_count_time1", 0);
+        counter2 = sp.getInt("counter2",0);
+        last_count_time2 = sp.getLong("last_count_time2", 0);
+        tvResult1.setText("" + counter1);
+        tvResult2.setText("" + counter2);
+        if(last_count_time1 != 0){
+            if(System.currentTimeMillis() - last_count_time1 < intverTimeMillis) {
+                timer1 = showTimer(tvResult4, last_count_time1 + intverTimeMillis - System.currentTimeMillis());
+            } else {
+                tvResult4.setText("倒计时完毕");
+            }
+        }
+        if(last_count_time2 != 0){
+            if(System.currentTimeMillis() - last_count_time2 < intverTimeMillis) {
+                timer2 = showTimer(tvResult5, last_count_time2 + intverTimeMillis - System.currentTimeMillis());
+            } else {
+                tvResult5.setText("倒计时完毕");
+            }
+        }
+    }
+
+    public CountDownTimer showTimer(final TextView textView, long intverTimeMillis) {
         CountDownTimer timer = new CountDownTimer(intverTimeMillis, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

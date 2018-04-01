@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
                         FragmentTransaction ft = mFm.beginTransaction();
                         if (mBabyMoveFragment == null) {
                             mBabyMoveFragment = new BabyMoveFragment();
-                            mBabyMoveFragment.ctx = ctx;
+                            mBabyMoveFragment.setContext(ctx);
                         } else {
                             System.out.println(mBabyMoveFragment);
                         }
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         if (mBabyMoveFragment == null) {
             FragmentTransaction ft = mFm.beginTransaction();
             mBabyMoveFragment = new BabyMoveFragment();
+            mBabyMoveFragment.setContext(ctx);
             ft.replace(R.id.content, mBabyMoveFragment);
             ft.commit();
         }
