@@ -55,8 +55,6 @@ public class BabyHitFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //
-
     }
 
     @Override
@@ -76,25 +74,25 @@ public class BabyHitFragment extends Fragment {
         resetBtn = (Button) view.findViewById(R.id.button2);
 
         hitCounter = 0;//设置初始数字
-
+        startTime = 0;
         addBtn.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
-                if(hitCounter ==0){
+                if(startTime == 0){
                     startTime = System.currentTimeMillis();
+                } else {
+                    hitCounter++;
                 }
-                hitCounter++;
                 if(System.currentTimeMillis() - startTime > 1000) {
                     int hit_times = (int)(hitCounter * 60000 / (System.currentTimeMillis() - startTime));
                     tvResult1.setText("" + hit_times);
                     hitHis.add(new Entry(hitHis.size(), hit_times));
                     notifyDataSetChanged(chart, hitHis, 0);
                     tvResult1.setTextSize(60);
-                }else{
+                } else {
                     tvResult1.setText("" + hitCounter);
                     tvResult1.setTextSize(20);
                 }
-
             }
         });
 
@@ -102,8 +100,8 @@ public class BabyHitFragment extends Fragment {
 
             public void onClick(View v) {
                 hitCounter = 0;
-                startTime = System.currentTimeMillis();
-                tvResult1.setText(""+0);
+                startTime = 0;
+                tvResult1.setText("" + 0);
                 tvResult1.setTextSize(60);
                 hitHis = new ArrayList<>();
             }
